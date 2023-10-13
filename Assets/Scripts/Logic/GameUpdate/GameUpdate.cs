@@ -10,12 +10,12 @@ public class GameUpdate:MonoSingleton<GameUpdate>
     public enum UpdateState
     {
         None,
-        Init,
+        Init,                      //初始化
         VerifyVersion,             //验证
         VerifyVersionSuccess,
-        Download,
-        Finish,
-        Failed,
+        Download,                  //下载
+        Finish,                    //结束
+        Failed,                    //失败
     }
 
     public Action<UpdateState> UpdateStateChangedEvent;
@@ -69,12 +69,96 @@ public class GameUpdate:MonoSingleton<GameUpdate>
             return;
         }
 #endif
-        //ResourceManager.Instance.AddressableErrorEvent += OnAddressableErrored;
-        //updateCoroution = StartCoroutine(StartGameUpdateImple());
+
+        ResourceManager.Instance.AddressableErrorEvent += OnAddressableErrored;
+        updateCoroution = StartCoroutine(StartGameUpdateImple());
+    }
+
+    private void OnAddressableErrored(AsyncOperationHandle arg1, Exception arg2)
+    {
+        _lastName = arg1.DebugName;
+        _lastErr = arg2.ToString();
+        LogUtil.LogFormat($"_lastName == {_lastName} _lastErr == {_lastErr}");
     }
 
     public void UpdateFinished()
     {
-        StartCoroutine(GameInitialize.Instance.EnterGame());
+       StartCoroutine(GameInitialize.Instance.EnterGame());
+    }
+
+    IEnumerator StartGameUpdateImple()
+    {
+        CurState = UpdateState.Init;
+        var initHandle = Addressables.InitializeAsync();
+        yield return initHandle;
+        
+        if (!string.IsNullOrEmpty(_lastName))
+        {
+            CurState = UpdateState.Failed;
+            LogUtil.LogErrorFormat("[GameUpdate]: int faild! {0} ", _lastErr);
+            StopCoroutine(updateCoroution);
+        }
+        yield return new WaitForEndOfFrame();
+
+        CurState = UpdateState.VerifyVersion;
+        var handler = Addressables.CheckForCatalogUpdates(false);
+        yield return handler;
+        
+        if (handler.Status != AsyncOperationStatus.Succeeded || (!string.IsNullOrEmpty(_lastName)))
+        {
+            CurState = UpdateState.Failed;
+            LogUtil.LogErrorFormat("[GameUpdate]: CheckForCatalogUpdates faild! {0} ", _lastErr);
+            StopCoroutine(updateCoroution);
+        }
+        yield return new WaitForEndOfFrame();
+
+        updateCatalogs = handler.Result;
+        Addressables.Release(handler);
+        if (updateCatalogs.Count > 0)
+        {
+            CurState = UpdateState.Download;
+            updateCoroution = StartCoroutine(StartDownload());
+        }
+        else
+        {
+            CurState = UpdateState.Finish;
+            UpdateFinished();
+        }
+    }
+
+    IEnumerator StartDownload()
+    {
+        yield return null;
+        var updateHandler = Addressables.UpdateCatalogs(updateCatalogs, false);
+        yield return updateHandler;
+        if (updateHandler.Status != AsyncOperationStatus.Succeeded ||
+            (!string.IsNullOrEmpty(_lastName)))
+        {
+            CurState = UpdateState.Failed;
+            LogUtil.LogErrorFormat("[GameUpdate]: UpdateCatalogs faild! {0} ", _lastErr);
+            StopCoroutine(updateCoroution);
+        }
+
+        yield return new WaitForEndOfFrame();
+        CurState = UpdateState.VerifyVersionSuccess;
+        var locators = updateHandler.Result;
+        foreach (var locator in locators)
+        {
+            //var sizeHandle = Addressables.GetDownloadSizeAsync(locator.Keys);
+            //yield return sizeHandle;
+            //Addressables.Release(sizeHandle);
+            var downloadHandle = Addressables.DownloadDependenciesAsync(locator.Keys, Addressables.MergeMode.Union);
+            while (!downloadHandle.IsDone)
+            {
+                DownLoadProcessChangeEvent?.Invoke(downloadHandle.PercentComplete);
+                yield return new WaitForEndOfFrame();
+            }
+            Addressables.Release(downloadHandle);
+        }
+        CurState = UpdateState.Finish;
+        Addressables.Release(updateHandler);
+        DownLoadProcessChangeEvent?.Invoke(1);
+        yield return null;
+        UpdateFinished();
     }
 }

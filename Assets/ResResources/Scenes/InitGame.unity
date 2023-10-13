@@ -133,6 +133,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1380327775}
   - component: {fileID: 1380327776}
+  - component: {fileID: 1380327777}
   m_Layer: 0
   m_Name: GameInitialize
   m_TagString: Untagged
@@ -169,7 +170,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowFrame: 1
   ShowDebugGrid: 0
-  update: 0
-  firstLoadPrefabs: []
+  update: 1
+  firstLoadPrefabs:
+  - name: GameManager
+    pos: {x: 0, y: 0, z: 0}
   secondLoadPrefabs: []
   otherLoadPrefabs: []
+--- !u!114 &1380327777
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1380327774}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c17d8db40746af418ddf7a7298b95e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

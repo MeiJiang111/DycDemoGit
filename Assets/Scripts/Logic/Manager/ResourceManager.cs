@@ -25,7 +25,6 @@ public class ResourceManager : MonoSingleton<ResourceManager>
         
     }
 
-    // Update is called once per frame
     void Update()
     {
         
@@ -51,7 +50,27 @@ public class ResourceManager : MonoSingleton<ResourceManager>
 
             success_?.Invoke(handle.Result as GameObject, param_);
         };
+    }
 
+    /// <summary>
+    /// Òì²½ÊµÀý»¯
+    /// </summary>
+    /// <param name="name_"></param>
+    /// <param name="callback_"></param>
+    /// <param name="param_"></param>
+    public void CreatInstanceAsync(string name_, Action<GameObject, object> success_ = null, Action<string> faild_ = null, object param_ = null)
+    {
+        Addressables.InstantiateAsync(name_).Completed += (handle) =>
+        {
+            if (handle.Status == AsyncOperationStatus.Failed)
+            {
+                LogUtil.LogWarningFormat("Instance {0} failed!", name_);
+                faild_?.Invoke(name_);
+                return;
+            }
+
+            success_?.Invoke(handle.Result as GameObject, param_);
+        };
     }
 
 }

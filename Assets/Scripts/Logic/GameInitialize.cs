@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Playables;
 
 public class GameInitialize : MonoSingleton<GameInitialize>
 {
@@ -42,7 +41,6 @@ public class GameInitialize : MonoSingleton<GameInitialize>
 
     private void Start()
     {
-        var resource = ResourceManager.Instance;
         GameUpdate.Instance.StartGameUpdate(update);
     }
 
@@ -61,5 +59,79 @@ public class GameInitialize : MonoSingleton<GameInitialize>
                 count--;
             });
         }
+
+        while (count > 0)
+        {
+            yield return null;
+        }
+
+        count = secondLoadPrefabs.Count;
+        foreach (var item in secondLoadPrefabs)
+        {
+            resourMgr.CreatInstanceAsync(item.name, (obj, parma) =>
+            {
+                obj.name = item.name;
+                obj.transform.localPosition = item.pos;
+                count--;
+            });
+        }
+
+        while (count > 0)
+        {
+            yield return null;
+        }
+
+        count = otherLoadPrefabs.Count;
+        foreach (var item in otherLoadPrefabs)
+        {
+            resourMgr.CreatInstanceAsync(item.name, (obj, parma) =>
+            {
+                obj.name = item.name;
+                obj.transform.localPosition = item.pos;
+                count--;
+            });
+        }
+
+        while (count > 0)
+        {
+            yield return null;
+        }
+
+        UIManager.Instance.RegisterListener();
+        CameraController.Instance.RegisterListenner();
+
+        // ¼ÓÔØÏµÍ³ÅäÖÃ todo
+        ConfigManager.Instance.LoadAllConfigs();
+        yield return new WaitUntil(() => { return ConfigManager.Instance.IsLoaded; });
+
+        
+
+        resourMgr.PreLoads();
+
+        while (!resourMgr.PreLoadFinish)
+        {
+            yield return null;
+        }
+
+        OnGameInit();
+
+
+        var uiMgr = UIManager.Instance;
+        uiMgr.AsyncLoadPreLoadingPanels(SceneType.All);
+        while (uiMgr.HasWaite)
+        {
+            yield return null;
+        }
+        LogUtil.Log("Game Initialize Pre loading finish!!!!");
+        yield return new WaitForEndOfFrame();
+
+        LevelManager.Instance.StartLevel(Global.LOGIN_LEVEL_NAME);
+    }
+
+    void OnGameInit()
+    {
+        _gameInit = true;
+        CacheResource.CheckCacheDir();
+        GameInitEvent?.Invoke();
     }
 }
