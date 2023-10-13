@@ -1,5 +1,6 @@
+using Unity.VisualScripting;
 using UnityEngine;
-
+using UnityEngine.Diagnostics;
 
 /// <summary>
 /// 泛型单例基类 任何继承自该类的类，都是单例类
@@ -7,28 +8,42 @@ using UnityEngine;
 /// <typeparam name="T">泛型</typeparam>
 public abstract class MonoSingleton<T> : MonoBehaviour where T : MonoSingleton<T>
 {
-    private static T instance;
+    private static T instance_;
     public static T Instance
     {
         get
         {
-            if (instance == null)
+            if (instance_ == null)
             {
-                instance = FindObjectOfType(typeof(T)) as T;
-                if (instance == null) instance = new GameObject("Chinar Single of " + typeof(T).ToString(), typeof(T)).GetComponent<T>();
+                instance_ = FindObjectOfType(typeof(T)) as T;
+                if (instance_ == null) 
+                {
+                    GameObject singleton = new GameObject();
+                    instance_ = singleton.AddComponent<T>();
+                    singleton.name = typeof(T).ToString();
+                }
             }
 
-            return instance;
+            //LogUtil.LogFormat($"instance_ = {instance_.name}");
+            return instance_;
         }
     }
 
-    private void Awake()
+    protected virtual void Awake()
     {
-        if (instance == null) instance = this as T;
+        if (instance_ == null)
+        {
+            instance_ = this as T;
+        }
+
+        if (instance_.transform.parent == null)
+        {
+            DontDestroyOnLoad(instance_.gameObject);
+        }
     }
 
-    private void OnApplicationQuit()
+    public void OnApplicationQuit()
     {
-        instance = null;
+        instance_ = null;
     }
 }
