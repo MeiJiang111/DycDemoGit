@@ -10,6 +10,7 @@ public class FrameRate : MonoBehaviour
     private float timeleft;
     private string faram;
 
+
     void Start()
     {
         timeleft = updateInterval;
@@ -23,7 +24,8 @@ public class FrameRate : MonoBehaviour
 
         if (timeleft <= 0.0)
         {
-            faram = "FPS: " + (accum / frames).ToString();
+            int fps = (int)(accum / frames);
+            faram = $"FPS: {fps}";
             timeleft = updateInterval;
             accum = 0.0f;
             frames = 0;

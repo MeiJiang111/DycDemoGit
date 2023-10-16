@@ -1,6 +1,4 @@
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Diagnostics;
 
 /// <summary>
 /// 泛型单例基类 任何继承自该类的类，都是单例类
@@ -24,7 +22,7 @@ public abstract class MonoSingleton<T> : MonoBehaviour where T : MonoSingleton<T
                 }
             }
 
-            LogUtil.LogFormat($"instance_ = {instance_.name}");
+            //LogUtil.LogFormat($"instance_ = {instance_.name}");
             return instance_;
         }
     }

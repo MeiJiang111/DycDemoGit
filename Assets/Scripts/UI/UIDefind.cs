@@ -36,13 +36,14 @@ public enum SceneType
 /// </summary>
 public enum PanelGroup
 {
-    None = 0,           //无效值
-    FullScreen = 1,     //全屏面板
-    HalfScreen = 2,     //非全屏的大面板
-    Dialog = 3,         //UI跟随的显示位置
-    PopInfo = 4,        //显示类
-    Global = 5,         //加载节点 最高
+    None = 0,                //无效值
+    FullScreen = 1,          //全屏面板
+    HalfScreen = 2,          //非全屏的大面板
+    Dialog = 3,              //UI跟随的显示位置
+    PopInfo = 4,             //显示类
+    Global = 5,              //加载节点 最高
 }
+
 
 [System.Serializable]
 public struct PanelPrefabConfig
@@ -51,6 +52,6 @@ public struct PanelPrefabConfig
     public PanelType type;
     public SceneType scene;
     public string name;
-    public bool isResident;      //是否持久，
-    public bool preloading;      //是否预加载
+    public bool isResident;           //是否持久，
+    public bool preloading;           //是否预加载
 }

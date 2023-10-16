@@ -15,11 +15,11 @@ MonoBehaviour:
   m_GroupName: Packed Assets
   m_Data:
     m_SerializedData: []
-  m_GUID: f1a0ec5b1c8ec0d44ab6c570ea15f52f
+  m_GUID: e918eb542ea5177478f8193ee9194939
   m_SerializeEntries: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: c1bb6f4e6657e11409e79bdbd84d7170, type: 2}
   m_SchemaSet:
     m_Schemas:
-    - {fileID: 11400000, guid: cf868836ad1804d41b4a0567c7c71e4b, type: 2}
-    - {fileID: 11400000, guid: fa778ff9be4a2f94a9ebfb8a6b594138, type: 2}
+    - {fileID: 11400000, guid: 063c6c4e01eccba449d3f92a08603a10, type: 2}
+    - {fileID: 11400000, guid: aef74a79068b93142a04554594f5184a, type: 2}

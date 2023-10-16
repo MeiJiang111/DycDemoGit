@@ -24,6 +24,7 @@ public class GameUpdate:MonoSingleton<GameUpdate>
     UpdateState _state;
     string _lastName;
     string _lastErr;
+   
     List<string> updateCatalogs;
     Coroutine updateCoroution;
 
@@ -60,6 +61,7 @@ public class GameUpdate:MonoSingleton<GameUpdate>
 
     public void StartGameUpdate(bool update_ = true)
     {
+        LogUtil.Log("Log GameUpdate Start = " + update_);
 #if UNITY_EDITOR
         if (!update_)
         {
@@ -83,15 +85,16 @@ public class GameUpdate:MonoSingleton<GameUpdate>
 
     public void UpdateFinished()
     {
-       StartCoroutine(GameInitialize.Instance.EnterGame());
+        StartCoroutine(GameInitialize.Instance.EnterGame());
     }
 
     IEnumerator StartGameUpdateImple()
     {
         CurState = UpdateState.Init;
+
         var initHandle = Addressables.InitializeAsync();
         yield return initHandle;
-        
+
         if (!string.IsNullOrEmpty(_lastName))
         {
             CurState = UpdateState.Failed;
@@ -103,15 +106,16 @@ public class GameUpdate:MonoSingleton<GameUpdate>
         CurState = UpdateState.VerifyVersion;
         var handler = Addressables.CheckForCatalogUpdates(false);
         yield return handler;
-        
-        if (handler.Status != AsyncOperationStatus.Succeeded || (!string.IsNullOrEmpty(_lastName)))
+
+        if (handler.Status != AsyncOperationStatus.Succeeded ||
+           (!string.IsNullOrEmpty(_lastName)))
         {
             CurState = UpdateState.Failed;
             LogUtil.LogErrorFormat("[GameUpdate]: CheckForCatalogUpdates faild! {0} ", _lastErr);
             StopCoroutine(updateCoroution);
         }
         yield return new WaitForEndOfFrame();
-
+       
         updateCatalogs = handler.Result;
         Addressables.Release(handler);
         if (updateCatalogs.Count > 0)
@@ -129,8 +133,10 @@ public class GameUpdate:MonoSingleton<GameUpdate>
     IEnumerator StartDownload()
     {
         yield return null;
+       
         var updateHandler = Addressables.UpdateCatalogs(updateCatalogs, false);
         yield return updateHandler;
+       
         if (updateHandler.Status != AsyncOperationStatus.Succeeded ||
             (!string.IsNullOrEmpty(_lastName)))
         {
@@ -138,15 +144,12 @@ public class GameUpdate:MonoSingleton<GameUpdate>
             LogUtil.LogErrorFormat("[GameUpdate]: UpdateCatalogs faild! {0} ", _lastErr);
             StopCoroutine(updateCoroution);
         }
-
         yield return new WaitForEndOfFrame();
+       
         CurState = UpdateState.VerifyVersionSuccess;
         var locators = updateHandler.Result;
         foreach (var locator in locators)
         {
-            //var sizeHandle = Addressables.GetDownloadSizeAsync(locator.Keys);
-            //yield return sizeHandle;
-            //Addressables.Release(sizeHandle);
             var downloadHandle = Addressables.DownloadDependenciesAsync(locator.Keys, Addressables.MergeMode.Union);
             while (!downloadHandle.IsDone)
             {

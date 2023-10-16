@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro.Examples;
 using UnityEngine;
+using UnityEngine.SocialPlatforms;
 
 public class GameInitialize : MonoSingleton<GameInitialize>
 {
@@ -12,8 +14,8 @@ public class GameInitialize : MonoSingleton<GameInitialize>
         public Vector3 pos;
     }
 
-    public bool ShowFrame;                     //显示帧数
-    private int TargetFrame = 60;              //限定帧数
+    public bool ShowFrame;                    //显示帧数
+    public int TargetFrame;                   //限定帧数
     public bool ShowDebugGrid;
 
     [Header("开启更新")] public bool update;
@@ -23,13 +25,14 @@ public class GameInitialize : MonoSingleton<GameInitialize>
 
     public event Action GameInitEvent;
 
-    bool _gameInit;
+    bool gameInit_;
 
     protected override void Awake()
     {
         base.Awake();
+        LogUtil.Log("Log GameInitialize Awake");
 
-        _gameInit = false;
+        gameInit_ = false;
         Application.targetFrameRate = TargetFrame;
         Application.runInBackground = true;
        
@@ -41,6 +44,7 @@ public class GameInitialize : MonoSingleton<GameInitialize>
 
     private void Start()
     {
+        LogUtil.Log("Log GameInitialize Start");
         GameUpdate.Instance.StartGameUpdate(update);
     }
 
@@ -49,11 +53,11 @@ public class GameInitialize : MonoSingleton<GameInitialize>
         var resourMgr = ResourceManager.Instance;
         int count = 0;
         count = firstLoadPrefabs.Count;
-
         foreach (var item in firstLoadPrefabs)
         {
             resourMgr.CreatInstanceAsync(item.name, (obj, parma) =>
             {
+                LogUtil.Log("Log EnterGame success" + obj + "  " + parma);
                 obj.name = item.name;
                 obj.transform.localPosition = item.pos;
                 count--;
@@ -97,15 +101,17 @@ public class GameInitialize : MonoSingleton<GameInitialize>
             yield return null;
         }
 
+        LogUtil.Log("11111");
+
         UIManager.Instance.RegisterListener();
-        CameraController.Instance.RegisterListenner();
+        //CameraController.Instance.RegisterListenner();
+
 
         // 加载系统配置 todo
-        ConfigManager.Instance.LoadAllConfigs();
-        yield return new WaitUntil(() => { return ConfigManager.Instance.IsLoaded; });
+        //ConfigManager.Instance.LoadAllConfigs();
+        //yield return new WaitUntil(() => { return ConfigManager.Instance.IsLoaded; });
 
-        
-
+  
         resourMgr.PreLoads();
 
         while (!resourMgr.PreLoadFinish)
@@ -125,13 +131,13 @@ public class GameInitialize : MonoSingleton<GameInitialize>
         LogUtil.Log("Game Initialize Pre loading finish!!!!");
         yield return new WaitForEndOfFrame();
 
-        LevelManager.Instance.StartLevel(Global.LOGIN_LEVEL_NAME);
+        //LevelManager.Instance.StartLevel(Global.LOGIN_LEVEL_NAME);
     }
 
     void OnGameInit()
     {
-        _gameInit = true;
-        CacheResource.CheckCacheDir();
-        GameInitEvent?.Invoke();
+        //_gameInit = true;
+        //CacheResource.CheckCacheDir();
+        //GameInitEvent?.Invoke();
     }
 }
