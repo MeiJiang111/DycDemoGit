@@ -10,13 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
-  m_Name: Packed Assets
+  m_Name: GameUpdate
   m_EditorClassIdentifier: 
-  m_GroupName: Packed Assets
+  m_GroupName: GameUpdate
   m_Data:
     m_SerializedData: []
   m_GUID: e918eb542ea5177478f8193ee9194939
-  m_SerializeEntries: []
+  m_SerializeEntries:
+  - m_GUID: 27b665df725fd724a8a21922ae5221df
+    m_Address: Assets/ResResources/Prefabs/UI/Login/UpdatePanel.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: c1bb6f4e6657e11409e79bdbd84d7170, type: 2}
   m_SchemaSet:
