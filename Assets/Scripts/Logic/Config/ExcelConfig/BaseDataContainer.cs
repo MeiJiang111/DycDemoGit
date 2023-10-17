@@ -1,25 +1,25 @@
-using System;
+ï»¿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using UnityEngine;
 using System.Reflection;
 using Newtonsoft.Json;
-
 /*
-»ù´¡Êı¾İÈİÆ÷Àà
-*/
-
+* åŸºç¡€æ•°æ®å®¹å™¨ç±»
+* **/
 [Serializable]
-public abstract class BaseDataContainer : ScriptableObject
+public  abstract  class BaseDataContainer: ScriptableObject
 {
 
     /// <summary>
-    /// ¼ÓÔØ¶ş½øÖÆÎÄ¼ş
+    /// åŠ è½½äºŒè¿›åˆ¶æ–‡ä»¶
     /// </summary>
-    public abstract void Load();
+    public abstract void Load() ;
 
 
     /// <summary>
-    /// »ñµÃ¶ÔÓ¦ÅäÖÃÎÄ¼şÃû
+    /// è·å¾—å¯¹åº”é…ç½®æ–‡ä»¶å
     /// </summary>
     /// <returns></returns>
     public abstract string GetConfigName();
@@ -30,7 +30,6 @@ public abstract class BaseDataContainer : ScriptableObject
         {
             return default(T);
         }
-
         T t = default(T);
         try
         {
@@ -43,6 +42,7 @@ public abstract class BaseDataContainer : ScriptableObject
         }
         return t;
     }
+
 
     public virtual void OnLoaded() { }
 

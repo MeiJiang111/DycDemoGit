@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,7 +12,7 @@ public class PanelPrefabConfigs : ScriptableObject
     {
         if (IsExists(panelPrefabConfig_.type))
         {
-            Debug.LogErrorFormat("Panel Type {0}-->{1} is exists! can not add more!", panelPrefabConfig_.type.ToString(), panelPrefabConfig_.name);
+            Debug.LogErrorFormat("Panel Type {0}-->{1} is exists! can not add more!", panelPrefabConfig_.type.ToString(),panelPrefabConfig_.name);
             return;
         }
         configLis.Add(panelPrefabConfig_);
