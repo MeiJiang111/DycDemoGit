@@ -102,8 +102,6 @@ public class PanelPrefabConfigBuild
     }
 
 
-
-
     static void AddPanelConfigs(List<PanelPrefab> panelInfoList)
     {
         foreach (var panelInfo in panelInfoList)

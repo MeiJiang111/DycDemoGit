@@ -16,7 +16,6 @@ public class ResourceToolMenu
     }
 
     [MenuItem("资源管理/构建UI面板配置", false, 3)]
-
     public static void BuildUIPanelConfig()
     {
         PanelPrefabConfigBuild.Build();
