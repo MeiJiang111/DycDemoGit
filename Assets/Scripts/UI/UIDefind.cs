@@ -1,3 +1,7 @@
+
+/// <summary>
+/// Enum UI面板类型
+/// </summary>
 public enum PanelType
 {
     None = 0,                         //无效值

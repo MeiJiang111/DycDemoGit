@@ -90,6 +90,7 @@ MonoBehaviour:
     m_LabelNames:
     - default
     - Prefab_Global
+    - GameUpdate
   m_SchemaTemplates: []
   m_GroupTemplateObjects:
   - {fileID: 11400000, guid: 43a446e83d79be24994be2d7edf4dd41, type: 2}

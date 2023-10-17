@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
-using TMPro.Examples;
+
 
 public class UIManager : MonoSingleton<UIManager>
 {
@@ -22,24 +22,24 @@ public class UIManager : MonoSingleton<UIManager>
     public Camera UiCamera;
     public Material desaturateMaterial;
 
-    SceneType _curSceneType;
+    private SceneType curSceneType_;
     public SceneType CurUISceneType
     {
         get
         {
-            return _curSceneType;
+            return curSceneType_;
         }
 
         set
         {
-            _curSceneType = value;
+            curSceneType_ = value;
             var types = cachePanels.Keys.ToArray();
             for (int i = types.Length - 1; i >= 0; i--)
             {
                 var panleType = types[i];
                 var _config = GetPanelConfig(panleType);
                 if (!_config.isResident ||
-                    (_config.scene != _curSceneType && _config.scene != SceneType.All))  //非持久化 直接卸载掉
+                    (_config.scene != curSceneType_ && _config.scene != SceneType.All))  //非持久化 直接卸载掉
                 {
                     var openclose = cachePanels[panleType];
                     cachePanels.Remove(panleType);
@@ -52,15 +52,16 @@ public class UIManager : MonoSingleton<UIManager>
         }
     }
 
+    private PanelPrefabConfig defaultPanelPrefabConfig = new PanelPrefabConfig() { name = string.Empty, isResident = false };
 
     Dictionary<PanelType, PanelPrefabConfig> _panelPrefabConfigDict = new Dictionary<PanelType, PanelPrefabConfig>();
-    PanelPrefabConfig defaultPanelPrefabConfig = new PanelPrefabConfig() { name = string.Empty, isResident = false };
+   
     public List<PanelType> preLoadingPanels;
-
 
     Dictionary<PanelType, OpenClosePanel> cachePanels = new Dictionary<PanelType, OpenClosePanel>();
     List<OpenClosePanel> curOpendPanel = new List<OpenClosePanel>();
     List<OpenClosePanel> tempList = new List<OpenClosePanel>();
+   
     int _waiteCount;
     public bool HasWaite => _waiteCount > 0;
 
@@ -72,7 +73,7 @@ public class UIManager : MonoSingleton<UIManager>
         base.Awake();
         if (fullScreenRoot == null || halfScreenRoot == null || dialogRoot == null || popInfoRoot == null)
         {
-            LogUtil.LogError("uimanager something bind null!");
+            LogUtil.LogError("UIManage Something Bind Null!");
             return;
         }
         _waiteCount = 0;
@@ -99,6 +100,10 @@ public class UIManager : MonoSingleton<UIManager>
         CanvasOffset = (Screen.width / resolutionX) * (1 - canvasScaler.matchWidthOrHeight) + (Screen.height / resolutionY) * canvasScaler.matchWidthOrHeight;
     }
 
+    /// <summary>
+    /// Panel Config配置加载
+    /// </summary>
+    /// <param name="configs"></param>
     public void OnPanleConfigLoaded(PanelPrefabConfigs configs)
     {
         var list = configs.configLis;
@@ -320,6 +325,7 @@ public class UIManager : MonoSingleton<UIManager>
         }
         CreatPanelAsync(name_, params_);
     }
+
     public void OpenPanel(PanelType panelType_, object params_ = null)
     {
         var config = GetPanelConfig(panelType_);
@@ -342,12 +348,14 @@ public class UIManager : MonoSingleton<UIManager>
     {
         _waiteCount--;
     }
+
     void OnCreatPanelSuccess(GameObject panel_, object params_ = null)
     {
         _waiteCount--;
         var openClose = panel_.GetComponent<OpenClosePanel>();
         SetPanelParent(openClose);
     }
+
     void OnCreatAndOpenPanelSuccess(GameObject panel_, object params_ = null)
     {
         _waiteCount--;
@@ -365,11 +373,13 @@ public class UIManager : MonoSingleton<UIManager>
             OpenPanelImple(openClose, params_);
         });
     }
+
     void OpenPanelImple(OpenClosePanel openClose_, object params_ = null)
     {
         openClose_.OpenPanel(params_);
         CloseAsyncMaskPanel();
     }
+
     void SetPanelParent(OpenClosePanel panel_)
     {
         switch (panel_.group)
@@ -396,7 +406,6 @@ public class UIManager : MonoSingleton<UIManager>
         panel_.transform.localRotation = Quaternion.identity;
         panel_.transform.localScale = Vector3.one;
     }
-
     #endregion
 
 
@@ -410,6 +419,7 @@ public class UIManager : MonoSingleton<UIManager>
         }
         return config;
     }
+
     public OpenClosePanel GetPanel(PanelType panelType_)
     {
         OpenClosePanel panel_;

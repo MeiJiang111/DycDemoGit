@@ -18,9 +18,10 @@ MonoBehaviour:
   m_GUID: e918eb542ea5177478f8193ee9194939
   m_SerializeEntries:
   - m_GUID: 27b665df725fd724a8a21922ae5221df
-    m_Address: Assets/ResResources/Prefabs/UI/Login/UpdatePanel.prefab
+    m_Address: UpdatePanel
     m_ReadOnly: 0
-    m_SerializedLabels: []
+    m_SerializedLabels:
+    - GameUpdate
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: c1bb6f4e6657e11409e79bdbd84d7170, type: 2}
   m_SchemaSet:

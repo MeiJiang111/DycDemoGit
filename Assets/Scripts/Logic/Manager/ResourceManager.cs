@@ -32,7 +32,7 @@ public class ResourceManager : ASingleton<ResourceManager>
         LogUtil.LogErrorFormat("[Addressable] {0}->{1}", arg1.DebugName, arg2.ToString());
     }
 
-    /*
+    
     /// <summary>
     /// 1.面板的配置
     /// 2.小岛场景上格子的配置
@@ -49,10 +49,11 @@ public class ResourceManager : ASingleton<ResourceManager>
             SubWaiteCount();
         }, (name_) =>
         {
-            LogUtil.LogErrorFormat("{0} load faild!!!", name_);
+            LogUtil.LogErrorFormat("{0} Load Faild !!!", name_);
             SubWaiteCount();
         });
 
+        /*
         var gridBuildMgr = GameManager.Instance.GetManager<GridBuildSystemManager>();
 
         LoadAsset<GridsConfig>(Global.TOWN_GRIDS_CONFIG, (config, parma) =>
@@ -86,21 +87,19 @@ public class ResourceManager : ASingleton<ResourceManager>
             LogUtil.LogErrorFormat("{0} load faild!!!", name_);
             SubWaiteCount();
         });
+        */
     }
    
     void SubWaiteCount()
     {
         waiteCount = Mathf.Max(0, waiteCount - 1);
         if (waiteCount == 0)
+        {
             PreLoadFinish = true;
+        } 
     }
-    */
-
-    public void PreLoads()
-    {
-
-    }
-
+    
+    
     public void CreatInstanceAsync(string name_, Vector3 pos_, Quaternion rotation, Transform parent = null, Action<GameObject, object> success_ = null, Action<string, object> faild_ = null, object param_ = null)
     {
         Addressables.InstantiateAsync(name_, pos_, rotation, parent).Completed += (handle) =>

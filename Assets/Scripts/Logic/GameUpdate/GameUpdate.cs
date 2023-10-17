@@ -48,20 +48,9 @@ public class GameUpdate:MonoSingleton<GameUpdate>
         updateCatalogs = new List<string>();
     }
 
-    void Start()
-    {
-        
-    }
-
-    
-    void Update()
-    {
-        
-    }
-
     public void StartGameUpdate(bool update_ = true)
     {
-        LogUtil.Log("Log GameUpdate Start = " + update_);
+        LogUtil.Log("Log GameUpdate Start == " + update_);
 #if UNITY_EDITOR
         if (!update_)
         {
@@ -83,11 +72,6 @@ public class GameUpdate:MonoSingleton<GameUpdate>
         LogUtil.LogFormat($"_lastName == {_lastName} _lastErr == {_lastErr}");
     }
 
-    public void UpdateFinished()
-    {
-        StartCoroutine(GameInitialize.Instance.EnterGame());
-    }
-
     IEnumerator StartGameUpdateImple()
     {
         CurState = UpdateState.Init;
@@ -105,6 +89,7 @@ public class GameUpdate:MonoSingleton<GameUpdate>
 
         CurState = UpdateState.VerifyVersion;
         var handler = Addressables.CheckForCatalogUpdates(false);
+        LogUtil.Log("Log StartGameUpdateImple handler == " + handler.Status);
         yield return handler;
 
         if (handler.Status != AsyncOperationStatus.Succeeded ||
@@ -128,6 +113,11 @@ public class GameUpdate:MonoSingleton<GameUpdate>
             CurState = UpdateState.Finish;
             UpdateFinished();
         }
+    }
+
+    public void UpdateFinished()
+    {
+        StartCoroutine(GameInitialize.Instance.EnterGame());
     }
 
     IEnumerator StartDownload()

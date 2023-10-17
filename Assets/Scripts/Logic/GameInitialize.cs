@@ -1,9 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using TMPro.Examples;
 using UnityEngine;
-using UnityEngine.SocialPlatforms;
 
 public class GameInitialize : MonoSingleton<GameInitialize>
 {
@@ -48,6 +46,7 @@ public class GameInitialize : MonoSingleton<GameInitialize>
         GameUpdate.Instance.StartGameUpdate(update);
     }
 
+    //Ω¯»Î”Œœ∑
     public IEnumerator EnterGame()
     {
         var resourMgr = ResourceManager.Instance;
@@ -101,7 +100,7 @@ public class GameInitialize : MonoSingleton<GameInitialize>
             yield return null;
         }
 
-        LogUtil.Log("11111");
+        LogUtil.Log("11111" + count);
 
         UIManager.Instance.RegisterListener();
         //CameraController.Instance.RegisterListenner();
@@ -121,7 +120,6 @@ public class GameInitialize : MonoSingleton<GameInitialize>
 
         OnGameInit();
 
-
         var uiMgr = UIManager.Instance;
         uiMgr.AsyncLoadPreLoadingPanels(SceneType.All);
         while (uiMgr.HasWaite)
@@ -131,6 +129,7 @@ public class GameInitialize : MonoSingleton<GameInitialize>
         LogUtil.Log("Game Initialize Pre loading finish!!!!");
         yield return new WaitForEndOfFrame();
 
+        OnIntoGame();
         //LevelManager.Instance.StartLevel(Global.LOGIN_LEVEL_NAME);
     }
 
@@ -139,5 +138,10 @@ public class GameInitialize : MonoSingleton<GameInitialize>
         //_gameInit = true;
         //CacheResource.CheckCacheDir();
         //GameInitEvent?.Invoke();
+    }
+
+    void OnIntoGame()
+    {
+        
     }
 }
