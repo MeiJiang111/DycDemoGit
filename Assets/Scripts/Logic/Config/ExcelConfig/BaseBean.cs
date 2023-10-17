@@ -1,9 +1,5 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 public class BaseBean
 {
@@ -19,6 +15,7 @@ public class BaseBean
             return default(T);
         }
         T t = default(T);
+
         try
         {
             t = JsonConvert.DeserializeObject<T>(json);

@@ -1,17 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using UnityEngine;
-using System.Reflection;
 using Newtonsoft.Json;
 /*
 * 基础数据容器类
 * **/
 [Serializable]
-public  abstract  class BaseDataContainer: ScriptableObject
+public abstract  class BaseDataContainer: ScriptableObject
 {
-
     /// <summary>
     /// 加载二进制文件
     /// </summary>
@@ -31,14 +26,15 @@ public  abstract  class BaseDataContainer: ScriptableObject
             return default(T);
         }
         T t = default(T);
+
         try
         {
             t = JsonConvert.DeserializeObject<T>(json);
         }
         catch (Exception e)
         {
-            //LogUtils.LogError(e.StackTrace);
-            //throw e;
+            LogUtil.LogError(e.StackTrace);
+            throw e;
         }
         return t;
     }

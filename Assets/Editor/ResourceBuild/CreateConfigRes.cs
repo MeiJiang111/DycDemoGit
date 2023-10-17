@@ -36,7 +36,7 @@ public class CreateConfigRes
 
         InitContainers();
 
-        //SerializationData();
+        SerializationData();
     }
 
     /// <summary>
@@ -86,7 +86,6 @@ public class CreateConfigRes
             }
         }
 
-        //加载配置表
         foreach (Type type in types)
         {
             CreateContainer(type);
@@ -101,7 +100,6 @@ public class CreateConfigRes
     /// <returns></returns>
     public static void CreateContainer(Type type)
     {
-        LogUtil.Log("CreateContainer");
         BaseDataContainer instance = (BaseDataContainer)ScriptableObject.CreateInstance(type);
         containers.Add(type.Name, instance);
     }
@@ -152,12 +150,12 @@ public class CreateConfigRes
                 AssetDatabase.DeleteAsset(outPath);
                 AssetDatabase.CreateAsset(container, outPath);
                 AssetDatabase.SaveAssets();
-                InitLanguageCode(obj);
+                //InitLanguageCode(obj);
             }
         }
         AssetDatabase.Refresh();
        
-        Debug.Log("====Config文件解析，生成Asset文件完成 ==== ");
+        Debug.Log("==== Config文件解析，生成Asset文件完成 ==== ");
     }
 
     private static void InitLanguageCode(BaseDataContainer container)
