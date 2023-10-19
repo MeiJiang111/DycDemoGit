@@ -171,18 +171,22 @@ public class UIManager : MonoSingleton<UIManager>
 
     }
 
+    /// <summary>
+    /// ‘§º”‘ÿ‘§÷∆
+    /// </summary>
+    /// <param name="scene_"></param>
     public void AsyncLoadPreLoadingPanels(SceneType scene_)
     {
-        foreach (var panelType in preLoadingPanels)
+        foreach (var item in preLoadingPanels)
         {
-            var _config = GetPanelConfig(panelType);
+            var _config = GetPanelConfig(item);
             if (string.IsNullOrEmpty(_config.name))
             {
-                LogUtil.LogWarningFormat("panle type {0} in preloading List,but config is null!", panelType);
+                LogUtil.LogWarningFormat("panle type {0} in preloading List,but config is null!", item);
                 continue;
             }
-            if (_config.scene == scene_ &&
-               !cachePanels.ContainsKey(panelType))
+
+            if (_config.scene == scene_ && !cachePanels.ContainsKey(item))
             {
                 CreatPanelAsync(_config.name, null, false, false);
             }
@@ -336,12 +340,20 @@ public class UIManager : MonoSingleton<UIManager>
     void CreatPanelAsync(string name_, object params_ = null, bool openMask_ = true, bool open_ = true)
     {
         if (openMask_)
+        {
             OpenAsyncMaskPanel();
-        _waiteCount++;
+            _waiteCount++;
+        }
+       
         if (open_)
+        {
             ResourceManager.Instance.CreatInstanceAsync(name_, OnCreatAndOpenPanelSuccess, OnCreatPanelFaild, params_);
+        }
         else
+        {
             ResourceManager.Instance.CreatInstanceAsync(name_, OnCreatPanelSuccess, OnCreatPanelFaild, params_);
+
+        }  
     }
 
     void OnCreatPanelFaild(string name_)
@@ -409,7 +421,12 @@ public class UIManager : MonoSingleton<UIManager>
     #endregion
 
 
-    PanelPrefabConfig GetPanelConfig(PanelType panelType_)
+    /// <summary>
+    /// √Ê∞Â≈‰÷√
+    /// </summary>
+    /// <param name="panelType_"></param>
+    /// <returns></returns>
+    public PanelPrefabConfig GetPanelConfig(PanelType panelType_)
     {
         PanelPrefabConfig config;
         if (!_panelPrefabConfigDict.TryGetValue(panelType_, out config))

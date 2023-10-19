@@ -7,11 +7,10 @@ using UnityEngine.SocialPlatforms;
 
 public class GameManager : MonoSingleton<GameManager>
 {
-
-    //public long CurTimestamp;
+    public long CurTimestamp;
     //public int SecondForMinute = 1;
     //public bool ASlash = true;
-    //Dictionary<Type, GameSystem> systemManagers;
+    Dictionary<Type, GameSystem> systemManagers;
     //GlobalConfigBean globalSetting;
     //public GlobalConfigBean GlobalSetting => globalSetting;
 
@@ -22,7 +21,7 @@ public class GameManager : MonoSingleton<GameManager>
 
         //GameInitialize.Instance.GameInitEvent += OnGameInit;
 
-        //systemManagers = new Dictionary<Type, GameSystem>();
+        systemManagers = new Dictionary<Type, GameSystem>();
         //AddAllManagers();
         //LevelManager.Instance.LevelPreStartEvent += OnLevelPreStart;
         //NetWorkManager.Instance.NetDropedEvent += OnNetDroped;
@@ -81,22 +80,22 @@ public class GameManager : MonoSingleton<GameManager>
 
 
 
-    //public void OnLogout()
-    //{
-    //    foreach (var mgr in systemManagers)
-    //    {
-    //        mgr.Value.OnLogout();
-    //    }
-    //}
+    public void OnLogout()
+    {
+        foreach (var mgr in systemManagers)
+        {
+            mgr.Value.OnLogout();
+        }
+    }
 
 
-    //public void Save()
-    //{
-    //    foreach (var mgr in systemManagers)
-    //    {
-    //        mgr.Value.Save(CurTimestamp);
-    //    }
-    //}
+    public void Save()
+    {
+        foreach (var mgr in systemManagers)
+        {
+            mgr.Value.Save(CurTimestamp);
+        }
+    }
 
     //private void OnApplicationQuit()
     //{
@@ -104,19 +103,19 @@ public class GameManager : MonoSingleton<GameManager>
     //        Save();
     //}
 
-    //public T GetManager<T>() where T : GameSystem
-    //{
-    //    return GetManagerEx<T>(typeof(T));
-    //}
+    public T GetManager<T>() where T : GameSystem
+    {
+        return GetManagerEx<T>(typeof(T));
+    }
 
-    //T GetManagerEx<T>(Type type_) where T : GameSystem
-    //{
-    //    if (systemManagers.ContainsKey(type_))
-    //    {
-    //        return (T)systemManagers[type_];
-    //    }
-    //    return null;
-    //}
+    T GetManagerEx<T>(Type type_) where T : GameSystem
+    {
+        if (systemManagers.ContainsKey(type_))
+        {
+            return (T)systemManagers[type_];
+        }
+        return null;
+    }
 
     //void AddAllManagers()
     //{

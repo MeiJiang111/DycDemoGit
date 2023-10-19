@@ -23,22 +23,14 @@ public class PanelPrefabConfigBuild
         }
     }
 
-    //need resident paneltypes
-    static List<PanelType> residents = new List<PanelType>
-    {
-        PanelType.MainPanel,
-        PanelType.LoadingPanel,
-        PanelType.AsyncMaskPanel,
-        PanelType.AlertPanel,
-        PanelType.StructurePanel,
-    };
-
+ 
     static PanelPrefabConfigs panelPrefabConfigs;
 
     public static void Build()
     {
         panelPrefabConfigs = ScriptableObject.CreateInstance<PanelPrefabConfigs>();
-        
+        LogUtil.Log("panelPrefabConfigs" + panelPrefabConfigs);
+
         foreach (var item in EditorPath.PANEL_PATHS)
         {
             var prefabs = CollectPanel(item);
@@ -114,10 +106,7 @@ public class PanelPrefabConfigBuild
                 Debug.LogWarning(string.Format("Panel: {0}' type not set!", panelName));
                 continue;
             }
-            //bool isResident = false;
-            //if (residents.Contains(panelType))
-            //    isResident = true;
-
+          
             panelPrefabConfigs.Add(new PanelPrefabConfig() { group = panelInfo.panelGroup, type = panelType, scene = panelInfo.panelScene, name = panelName, isResident = panelInfo.isResident });
         }
     }

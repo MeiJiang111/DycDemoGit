@@ -23,7 +23,10 @@ public class PanelPrefabConfigs : ScriptableObject
         foreach (var item in configLis)
         {
             if (item.type == panelType_ && item.name == prefabName_ && item.group == group_)
+            {
                 return true;
+            }
+                
         }
         return false;
     }

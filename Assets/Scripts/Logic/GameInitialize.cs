@@ -18,19 +18,14 @@ public class GameInitialize : MonoSingleton<GameInitialize>
 
     [Header("开启更新")] public bool update;
     public List<LoadPrefabConfig> firstLoadPrefabs;
-    public List<LoadPrefabConfig> secondLoadPrefabs;
-    public List<LoadPrefabConfig> otherLoadPrefabs;
-
     public event Action GameInitEvent;
 
-    bool gameInit_;
 
     protected override void Awake()
     {
         base.Awake();
         LogUtil.Log("Log GameInitialize Awake");
 
-        gameInit_ = false;
         Application.targetFrameRate = TargetFrame;
         Application.runInBackground = true;
        
@@ -49,6 +44,7 @@ public class GameInitialize : MonoSingleton<GameInitialize>
     //进入游戏
     public IEnumerator EnterGame()
     {
+        LogUtil.Log("Log GameInitialize EnterGame");
         var resourMgr = ResourceManager.Instance;
         int count = 0;
         count = firstLoadPrefabs.Count;
@@ -56,7 +52,7 @@ public class GameInitialize : MonoSingleton<GameInitialize>
         {
             resourMgr.CreatInstanceAsync(item.name, (obj, parma) =>
             {
-                LogUtil.Log("Log EnterGame success" + obj + "  " + parma);
+                LogUtil.Log("Log EnterGame success  " + obj + "  " + parma);
                 obj.name = item.name;
                 obj.transform.localPosition = item.pos;
                 count--;
@@ -67,40 +63,6 @@ public class GameInitialize : MonoSingleton<GameInitialize>
         {
             yield return null;
         }
-
-        count = secondLoadPrefabs.Count;
-        foreach (var item in secondLoadPrefabs)
-        {
-            resourMgr.CreatInstanceAsync(item.name, (obj, parma) =>
-            {
-                obj.name = item.name;
-                obj.transform.localPosition = item.pos;
-                count--;
-            });
-        }
-
-        while (count > 0)
-        {
-            yield return null;
-        }
-
-        count = otherLoadPrefabs.Count;
-        foreach (var item in otherLoadPrefabs)
-        {
-            resourMgr.CreatInstanceAsync(item.name, (obj, parma) =>
-            {
-                obj.name = item.name;
-                obj.transform.localPosition = item.pos;
-                count--;
-            });
-        }
-
-        while (count > 0)
-        {
-            yield return null;
-        }
-
-        LogUtil.Log("11111" + count);
 
         UIManager.Instance.RegisterListener();
         //CameraController.Instance.RegisterListenner();
@@ -110,13 +72,13 @@ public class GameInitialize : MonoSingleton<GameInitialize>
         //ConfigManager.Instance.LoadAllConfigs();
         //yield return new WaitUntil(() => { return ConfigManager.Instance.IsLoaded; });
 
-  
-        resourMgr.PreLoads();
 
-        while (!resourMgr.PreLoadFinish)
-        {
-            yield return null;
-        }
+        //resourMgr.PreLoads();
+
+        //while (!resourMgr.PreLoadFinish)
+        //{
+        //    yield return null;
+        //}
 
         OnGameInit();
 
@@ -129,19 +91,17 @@ public class GameInitialize : MonoSingleton<GameInitialize>
         LogUtil.Log("Game Initialize Pre loading finish!!!!");
         yield return new WaitForEndOfFrame();
 
-        OnIntoGame();
         //LevelManager.Instance.StartLevel(Global.LOGIN_LEVEL_NAME);
     }
 
     void OnGameInit()
     {
-        //_gameInit = true;
         //CacheResource.CheckCacheDir();
         //GameInitEvent?.Invoke();
     }
 
-    void OnIntoGame()
+    void OnLoadUpdataPanel()
     {
-        
+        MainSceneUIManager.Instance.OpenTargetSystem(SystemType.Fishery);
     }
 }

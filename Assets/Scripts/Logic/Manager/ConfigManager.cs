@@ -5,7 +5,7 @@ using System.IO;
 using System.Reflection;
 using UnityEngine;
 
-public class ConfigManager : ASingleton<ConfigManager>
+public class ConfigManager : MonoSingleton<ConfigManager>
 {
     public Dictionary<Type, BaseDataContainer> containers = new Dictionary<Type, BaseDataContainer>();
     private int _cur;   //当前加载进度
